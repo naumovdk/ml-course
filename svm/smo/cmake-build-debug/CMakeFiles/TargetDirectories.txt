@@ -1,0 +1,3 @@
+C:/Users/dimna/Desktop/ml-course/svm/smo/cmake-build-debug/CMakeFiles/smo.dir
+C:/Users/dimna/Desktop/ml-course/svm/smo/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/dimna/Desktop/ml-course/svm/smo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
