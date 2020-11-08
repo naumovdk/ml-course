@@ -17,7 +17,7 @@ vector<double> a;
 double b;
 
 double eps = 1e-5;
-int ITERATIONS = 300;
+int ITERATIONS = 1000;
 
 int second_random_index(int i, int size) {
     int ans;
