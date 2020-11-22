@@ -1,0 +1,3 @@
+C:/Users/dimna/Desktop/ml-course/bayes/bayes/cmake-build-debug/CMakeFiles/bayes.dir
+C:/Users/dimna/Desktop/ml-course/bayes/bayes/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/dimna/Desktop/ml-course/bayes/bayes/cmake-build-debug/CMakeFiles/rebuild_cache.dir
