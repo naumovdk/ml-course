@@ -2,16 +2,16 @@ from collections import Counter
 from math import exp, log
 from sklearn.base import BaseEstimator
 
-class Bayes(BaseEstimator):
-	def __init__(self, k=2, lambdas=[1, 1], alpha=1, eps=1e-35):
+class Bayes():
+	def __init__(self, k=2, lambdas=[1, 1], alpha=1, n=1):
 		self.k = k
 		self.lambdas = lambdas
 		self.alpha = alpha
+		self.n = n
 
 		self.x_count = set()
 		self.c_count = Counter()
 		self.p = []
-		self.eps = eps	
 
 	
 	def fit(self, x_train, y_train):
@@ -22,9 +22,8 @@ class Bayes(BaseEstimator):
 				data[c][x] += 1
 			self.c_count[c] += 1 
 		
-		self.p   = [{x:         (data[c][x] + self.alpha) / (self.c_count[c] + self.alpha * 2)  for x in self.x_count} for c in range(self.k)]
-		self.pos = [{x: log(    (data[c][x] + self.alpha) / (self.c_count[c] + self.alpha * 2)) for x in self.x_count} for c in range(self.k)]
-		self.neg = [{x: log(1 - (data[c][x] + self.alpha) / (self.c_count[c] + self.alpha * 2)) for x in self.x_count} for c in range(self.k)]
+		self.p = [{x: (data[c][x] + self.alpha) / (self.c_count[c] + self.alpha * 2) for x in self.x_count} for c in range(self.k)]
+		return self
 
 
 	def calc_prob_of_xs_on_cond_of_c(self, xs, c):
@@ -33,10 +32,10 @@ class Bayes(BaseEstimator):
 		res = log(self.c_count[c] / sum(self.c_count.values()))
 		for x in self.p[c]:
 			if x in xs:
-				res += self.pos[c][x]
+				res += log(self.p[c][x])
 			else:
-				res += self.neg[c][x]
-		return exp(res) * l[c]
+				res += log(1 - self.p[c][x])
+		return exp(res)
 
 
 	def predict_one(self, xs):
@@ -44,13 +43,20 @@ class Bayes(BaseEstimator):
 		denum = sum([self.calc_prob_of_xs_on_cond_of_c(xs, c) for c in range(self.k)])
 		res = []
 		for c in range(self.k):
-			num = self.calc_prob_of_xs_on_cond_of_c(xs, c)
-			res.append(num / denum if denum != 0 else 1)
+			num = self.calc_prob_of_xs_on_cond_of_c(xs, c) * self.lambdas[c]
+			res.append(num / denum)
 		return res
 
 
-	def predict(self, xs_test):
-		return list(map(self.predict_one, xs_test))
+	def predict(self, xs_test, y_score=False):
+		predictions = list(map(self.predict_one, xs_test))
+		return predictions
+		# if y_score:
+		# 	for c in predictions:
+		# 		c[0] /= sum(c)
+		# 		c[1] /= sum(c)
+		# 	return [1 - c[1] for c in predictions]
+		# return [c.index(min(c)) for c in predictions]
 
 
 if __name__ == '__main__':
